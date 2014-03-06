@@ -14,7 +14,10 @@
     "famous/modifier": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/transform": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized",
-    "famous/polyfills": "git+ssh://git@github.com:Famous/famous.git#modularized"
+    "famous/polyfills": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/transitions/spring-transition": "git+ssh://git@github.com:Famous/famous-transitions.git#modularized",
+    "famous/transitions/wall-transition": "git+ssh://git@github.com:Famous/famous-transitions.git#modularized",
+    "famous/transitions/transitionable": "git+ssh://git@github.com:Famous/famous-transitions.git#modularized"
   },
   "local": ["views/app-view"]
 }
