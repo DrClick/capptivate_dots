@@ -3,6 +3,7 @@ var Transform       = require('famous/transform');
 var Surface         = require('famous/surface'); 
 var Modifier        = require('famous/modifier');
 var Dot             = require("views/dot-view");
+var Timer           = require("famous/utilities/timer");
 
 function AppView() {
     View.apply(this, arguments);
@@ -59,7 +60,7 @@ function _create(){
     //Load the board
    
     for (var j = 6 - 1; j >= 0; j--) {
-        setTimeout(function(row){
+        Timer.setTimeout(function(row){
             for (var i = 0; i < 6; i++) {
                 this.dots[row][i].drop(row);
             }

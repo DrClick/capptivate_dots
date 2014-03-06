@@ -13,7 +13,8 @@
     "famous/surface": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/modifier": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/transform": "git+ssh://git@github.com:Famous/famous.git#modularized",
-    "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized"
+    "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/utilities/timer": "git+ssh://git@github.com:Famous/famous-utilities.git#modularized"
   },
   "local": [
     "views/dot-view",

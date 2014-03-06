@@ -32,10 +32,10 @@ function Dot () {
 Dot.prototype = Object.create( View.prototype );
 Dot.prototype.constructor = Dot;
 Dot.DEFAULT_OPTIONS = {
-	stage: -350,
+	stage: 0,
 	grid: 90,
 	board: 640,
-	baseAnimationTime: 500
+	baseAnimationTime: 100
 };
 
 
@@ -49,13 +49,13 @@ function _create(){
         }
     });
 
-    this.x = _calcOffset.call(this, this.options.x);
+    this.x = _calcOffset.call(this, this.options.x, false);
    
 }//end create
 
 Dot.prototype.drop = function(index){
-	var offset = _calcOffset.call(this, index);
-	var duration = this.options.baseAnimationTime;
+	var offset = _calcOffset.call(this, index, true);
+	var duration = this.options.baseAnimationTime * index;
 
 	this.visible = true;
 
@@ -90,8 +90,8 @@ Dot.prototype.drop = function(index){
 }
 
 
-function _calcOffset(index){
-	var top = -this.options.board/2;
+function _calcOffset(index, verticle){
+	var top = verticle ? 0 : -this.options.board/2;
 	var grid_base = (this.options.board - (this.options.grid * 6));
 	return top + grid_base + (index * this.options.grid);
 }
@@ -117,7 +117,7 @@ Dot.prototype.render = function(){
 		return {
 			transform : Transform.translate(this.x, position, 0),
 			target : this.surface.render(),
-			origin: [.5,.5]
+			origin: [.5,0]
 		};
 	}//end if visible
 }
