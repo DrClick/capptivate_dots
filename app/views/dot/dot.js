@@ -54,44 +54,25 @@ function _create(){
 }//end create
 
 Dot.prototype.drop = function(index){
-	var offset = _calcOffset.call(this, index, true);
+	this.offset = _calcOffset.call(this, index, true);
 	var duration = this.options.baseAnimationTime * index;
 
 	this.visible = true;
 
 
-	this.position.set(offset, 
+	this.position.set(this.offset, 
 		{
             method: 'wall',
-            period: 300,
-            dampingRatio: .4,
-            restitution: .95
+            period: 200,
+            dampingRatio: .3,
+            restitution: .7
     	}
-    );
-
-	//  this.modifier.setOpacity(1);
-	// // this.modifier.setTransform(
-	// // 	Transform.translate(this.x, offset-this.options.grid, 0),
-	// // 	{duration: duration},
-	// // 	function(){
-
-	// 		this.modifier.setTransform(
-	// 			Transform.translate(this.x, offset, 0), 
-	// 			{
-	// 		            method: 'wall',
-	// 		            period: 400,
-	// 		            dampingRatio: 0
-		        	
-	// 	        }
-	// 	    );
-	// // 	}.bind(this)
-	// // );
-	
+    );	
 }
 
 
 function _calcOffset(index, verticle){
-	var top = verticle ? 0 : -this.options.board/2;
+	var top = verticle ? 120 : -this.options.board/2;
 	var grid_base = (this.options.board - (this.options.grid * 6));
 	return top + grid_base + (index * this.options.grid);
 }
@@ -114,6 +95,10 @@ Dot.prototype.resize = function () {
 Dot.prototype.render = function(){
 	if(this.visible){
 		var position = this.position.get();
+		//check that it has not run past its bounds
+		if(position > this.offset){
+			position = this.offset;
+		}
 		return {
 			transform : Transform.translate(this.x, position, 0),
 			target : this.surface.render(),

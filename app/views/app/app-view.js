@@ -16,7 +16,7 @@ AppView.DEFAULT_OPTIONS = {};
 function _create(){
     this.surface = new Surface({
         classes: ["board"],
-        size: [640, 640],
+        size: [640, 960],
         properties: {
             border: "solid 1px white"
         }
@@ -24,7 +24,7 @@ function _create(){
 
     this.modifier = new Modifier({
         origin: [.5,.5],
-        size: [640, 640]
+        size: [640, 960]
     });
 
     this._add(this.modifier).add(this.surface);

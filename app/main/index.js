@@ -27,10 +27,11 @@ var scale = Math.min(scaleX, scaleY);
 
 var modifier = new Modifier({
     origin		: [0.5, 0.5],
+    size 		: [640, 960],
     transform   : Transform.scale(scale, scale, 0) 
 });
 
 var appView = new AppView();
 
 
-context.add(appView);
+context.add(modifier).add(appView);
