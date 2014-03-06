@@ -1,7 +1,8 @@
-var View = require('famous/view');
-var Transform = require('famous/transform');
-var Surface = require('famous/surface'); 
-var Modifier = require('famous/modifier');
+var View 				= require('famous/view');
+var Transform 			= require('famous/transform');
+var Surface 			= require('famous/surface'); 
+var Modifier 			= require('famous/modifier');
+var WallTransition  	= require("famous/transitions/wall-transition")
 
 /*
  *  @constructor
@@ -10,35 +11,50 @@ var Modifier = require('famous/modifier');
  *  @description
  *      overwrite me.
  */
-function EmptyView () {
+function Dot () {
     View.apply(this, arguments);
-
-    var surface = new Surface({ 
-        size: [100,100], properties: { backgroundColor: 'white' } 
-    });
-
-    this.node.add( surface );
-    
+	
+	_create.call(this); 
 }
 
-EmptyView.prototype = Object.create( View.prototype );
-EmptyView.prototype.constructor = EmptyView;
+Dot.prototype = Object.create( View.prototype );
+Dot.prototype.constructor = Dot;
+Dot.DEFAULT_OPTIONS = {}
 
-EmptyView.DEFAULT_OPTIONS = {}
 
-EmptyView.prototype.events = function () {
+function _create(){
+    this.surface = new Surface({
+        classes: ["dot"],
+        size: [50, 50],
+        properties: {
+            borderRadius: "25px",
+            backgroundColor: "pink"
+        }
+    });
+
+    this.modifier = new Modifier({
+        origin: [.5,.5],
+        transform: Transform.translate(0,0,0)
+    });
+
+    this._add(this.modifier).add(this.surface);
+}//end create
+
+
+
+Dot.prototype.events = function () {
 
     Engine.on('resize', this.resize.bind(this));
     return this;
 
 }
 
-EmptyView.prototype.unbindEvents = function () {
+Dot.prototype.unbindEvents = function () {
     
 }
 
-EmptyView.prototype.resize = function () {
+Dot.prototype.resize = function () {
     return this;
 }
 
-module.exports = EmptyView;
+module.exports = Dot;
