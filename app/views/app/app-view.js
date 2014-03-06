@@ -36,11 +36,6 @@ function _create(){
     var colorIndex = Math.round(Math.random() * 4);
     var color = colors[colorIndex];
     
-    // var dot = new Dot({x:3, color: color});
-    // this._add(dot); 
-    // dot.drop(2);
-
-
 
     //create the board
     this.dots = [];
@@ -58,21 +53,19 @@ function _create(){
 
     
     //Load the board
-   
-    for (var j = 6 - 1; j >= 0; j--) {
-        Timer.setTimeout(function(row){
-            for (var i = 0; i < 6; i++) {
-                this.dots[row][i].drop(row);
+    var currentRow = 5;
+    var buildInterval = Timer.setInterval(
+        function(){
+            if(currentRow >= 0){
+                for (var i = 0; i < 6; i++) {
+                    this.dots[currentRow][i].drop(currentRow);
+                }
+                currentRow--;
+            }//end if in range
+            else{
+                Timer.clear(buildInterval);
             }
-        }.bind(this, j), 300);
-    };
-    
-    
-    
-    
-    
-
-    
+        }.bind(this),100);
 
 }//end create
     

@@ -63,9 +63,9 @@ Dot.prototype.drop = function(index){
 	this.position.set(offset, 
 		{
             method: 'wall',
-            period: 400,
-            dampingRatio: .3,
-            restitution: .8
+            period: 300,
+            dampingRatio: .4,
+            restitution: .95
     	}
     );
 
