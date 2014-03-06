@@ -1,0 +1,20 @@
+{
+  "name": "views/app-view",
+  "namespace": "views",
+  "version": "0.0.0",
+  "author": "Tom Watson",
+  "scripts": [
+      "index.js"
+  ],
+  "description": "Main application view",
+  "license": "MIT",
+  "dependencies": {
+    "famous/engine": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/surface": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/modifier": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/transform": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/transitions/wall-transition"  : "git+ssh://git@github.com:Famous/famous-transitions.git#master"
+  },
+  "local": ["view/dot-view"]  
+}

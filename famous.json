@@ -1,0 +1,31 @@
+{
+  "name": "famous/templates/base",
+  "version": "0.0.0",
+  "description": "Emulation of dots physics and game play",
+  "author": [],
+  "dependencies": {
+    "famous/surface"                      : "git+ssh://git@github.com:Famous/famous.git#master",
+    "famous/modifier"                     : "git+ssh://git@github.com:Famous/famous.git#master",
+    "famous/transform"                    : "git+ssh://git@github.com:Famous/famous.git#master",
+    "famous/view"                         : "git+ssh://git@github.com:Famous/famous.git#master",
+    "famous/polyfills"                    : "git+ssh://git@github.com:Famous/famous-polyfills.git#master",
+    "famous/engine"                       : "git+ssh://git@github.com:Famous/famous.git#master",
+    "famous/physics/engine"               : "git+ssh://git@github.com:Famous/famous-physics.git#master",
+    "famous/physics/bodies/circle"        : "git+ssh://git@github.com:Famous/famous-physics.git#master"
+
+
+  },
+  "scripts": [],
+  "local":["main"],
+  "paths": ["app"],
+  "main":"main",
+  "styles": ["app/main/styles.css"],
+  "images": ["**/*.ico"],
+  "namespace": "/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FamousPrivateBeta/capptivate_dots.git"
+  },
+  "validGithub": false
+}
