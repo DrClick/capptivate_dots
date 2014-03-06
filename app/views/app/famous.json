@@ -16,5 +16,5 @@
     "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/transitions/wall-transition"  : "git+ssh://git@github.com:Famous/famous-transitions.git#master"
   },
-  "local": ["view/dot-view"]  
+  "local": ["views/dot-view"]  
 }
