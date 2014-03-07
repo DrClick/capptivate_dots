@@ -2,8 +2,12 @@ var View            = require('famous/view');
 var Transform       = require('famous/transform');
 var Surface         = require('famous/surface'); 
 var Modifier        = require('famous/modifier');
-var Dot             = require("views/dot-view");
+
 var Timer           = require("famous/utilities/timer");
+var Engine          = require("famous/engine");
+
+var Board           = require("models/board-model");
+
 
 function AppView() {
     View.apply(this, arguments);
@@ -15,59 +19,31 @@ AppView.DEFAULT_OPTIONS = {};
 
 function _create(){
     this.surface = new Surface({
-        classes: ["board"],
-        size: [640, 960],
-        properties: {
-            border: "solid 1px white"
-        }
+        classes: ["game"],
+        size: [640, 960]
     });
 
     this.modifier = new Modifier({
         origin: [.5,.5],
-        size: [640, 960]
+        size: [640, 960],
+        transform: Transform.translate(0, 100, 1)
+
     });
 
     this._add(this.modifier).add(this.surface);
 
-    var colors = ["red", "blue", "yellow", "purple", "green"];
-
-
-
-    var colorIndex = Math.round(Math.random() * 4);
-    var color = colors[colorIndex];
     
 
-    //create the board
-    this.dots = [];
-    for (var j = 0; j < 6; j++) {
-        this.dots[j] = [];
-        for (var i = 0; i < 6; i++) {
-            var colorIndex = Math.round(Math.random() * 4);
-            var color = colors[colorIndex];
-            
-            var dot = new Dot({x:i, color: color});
-            this.dots[j].push(dot);
-            this._add(dot); 
-        };
-    };
 
-    
-    //Load the board
-    var currentRow = 5;
-    var buildInterval = Timer.setInterval(
-        function(){
-            if(currentRow >= 0){
-                for (var i = 0; i < 6; i++) {
-                    this.dots[currentRow][i].drop(currentRow);
-                }
-                currentRow--;
-            }//end if in range
-            else{
-                Timer.clear(buildInterval);
-            }
-        }.bind(this),100);
+    this._add(Board.boardView);
+    Board.init();
+    Board.drop();
+
+ 
 
 }//end create
+
+
     
 
 module.exports = AppView;

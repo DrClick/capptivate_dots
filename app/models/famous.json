@@ -1,0 +1,23 @@
+{
+  "name": "models/board-model",
+  "namespace": "models",
+  "version": "0.0.0",
+  "author": "Tom Watson",
+  "scripts": [
+      "board-model.js"
+  ],
+  "description": "main view",
+  "license": "MIT",
+  "dependencies": {
+    "famous/engine": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/surface": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/modifier": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/transform": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/event-handler": "git+ssh://git@github.com:Famous/famous.git#master",
+    "famous/utilities/timer": "git+ssh://git@github.com:Famous/famous-utilities.git#modularized"
+  },
+  "local": [
+    "views/dot-view",
+    "views/board-view"
+  ]
+}

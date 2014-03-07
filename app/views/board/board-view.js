@@ -13,32 +13,29 @@ var Modifier = require('famous/modifier');
 function BoardView () {
     View.apply(this, arguments);
 
-    var surface = new Surface({ 
-        size: [100,100], properties: { backgroundColor: 'white' } 
-    });
-
-    this.node.add( surface );
-    
+    _create.bind(this);
 }
-
 BoardView.prototype = Object.create( View.prototype );
 BoardView.prototype.constructor = BoardView;
-
 BoardView.DEFAULT_OPTIONS = {}
 
-BoardView.prototype.events = function () {
+function _create(){
+    this.surface = new Surface({
+        classes: ["game"],
+        size: [640, 960],
+        properties: {
+            border: "solid 1px white"
+        }
+    });
 
-    Engine.on('resize', this.resize.bind(this));
-    return this;
+    this.modifier = new Modifier({
+        origin: [.5,.5],
+        size: [640, 960],
+        transform: Transform.translate(0, 0, 2)
 
-}
+    });
 
-BoardView.prototype.unbindEvents = function () {
-    
-}
-
-BoardView.prototype.resize = function () {
-    return this;
+    this._add(this.modifier).add(this.surface);
 }
 
 module.exports = BoardView;

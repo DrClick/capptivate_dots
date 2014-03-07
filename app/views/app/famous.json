@@ -17,6 +17,6 @@
     "famous/utilities/timer": "git+ssh://git@github.com:Famous/famous-utilities.git#modularized"
   },
   "local": [
-    "views/dot-view",
-    "views/board-view"]  
+    "models/board-model"
+    ]  
 }
