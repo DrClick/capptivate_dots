@@ -13,6 +13,10 @@
     "famous/surface": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/modifier": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/transform": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/input/generic-sync": "git+ssh://git@github.com:Famous/famous-sync.git#modularized",
+    "famous/input/mouse-sync": "git+ssh://git@github.com:Famous/famous-sync.git#modularized",
+    "famous/input/touch-sync": "git+ssh://git@github.com:Famous/famous-sync.git#modularized",
+    "famous/transitions/transitionable"  : "git+ssh://git@github.com:Famous/famous-transitions.git#master",
     "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized",
     "famous/utilities/timer": "git+ssh://git@github.com:Famous/famous-utilities.git#modularized"
   },

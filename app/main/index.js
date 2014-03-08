@@ -31,7 +31,11 @@ var modifier = new Modifier({
     transform   : Transform.scale(scale, scale, 1) 
 });
 
-var appView = new AppView();
+var appView = new AppView({scale: scale});
+
+
 
 
 context.add(modifier).add(appView);
+
+appView.start();

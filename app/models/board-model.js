@@ -8,6 +8,9 @@ var board = {
 	initialized : false,
 	dots : [[],[],[],[],[],[]],
 	colors : ["red", "blue", "yellow", "purple", "green"],
+	gridSize: 90,
+	boardSize: 640,
+	dotDiameter: 40,
 	boardView: new BoardView()
 
 };
@@ -22,6 +25,8 @@ board.init = function(){
     EventHandler.setOutputHandler(this, this._eventOutput);
 
     
+
+
     //create the board
     for (var j = 0; j < 6; j++) {
         this.dots[j] = [];
@@ -33,7 +38,10 @@ board.init = function(){
 
             dot.on("clicked", _dotclickedHandler.bind(this));
             this.dots[j].push(dot);
-            this.boardView._add(dot); 
+            this.boardView._add(dot);
+
+
+            dot.pipe(this.boardView._eventOutput); 
         };
     };
 }//end init
@@ -69,6 +77,7 @@ board.reset = function(){
 function _dotclickedHandler(){
 	console.log("dot clicked");
 }
+
 
 
 

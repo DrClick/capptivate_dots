@@ -64,7 +64,8 @@ function _create(){
 
 
     this.surface.on("mousedown", _clickHandler.bind(this));
-    this.surface.on("touchstart", _clickHandler.bind(this));
+    //this.surface.on("touchstart", _clickHandler.bind(this));
+    this.surface.pipe(this._eventOutput);
 
     this.x = _calcOffset.call(this, this.options.x, false);
    
@@ -88,7 +89,7 @@ Dot.prototype.drop = function(index){
 }
 
 function _clickHandler(evt){
-	console.log(evt);
+	console.log(this);
 	this._eventOutput.emit("clicked");
 
 	this.highlightScale.set(this.options.highlightScale,{duration: this.options.highlightDuration});	
@@ -96,7 +97,7 @@ function _clickHandler(evt){
 
 
 function _calcOffset(index, verticle){
-	var top = verticle ? 120 : -this.options.board/2;
+	var top = verticle ? 160 : -this.options.board/2;
 	var grid_base = (this.options.board - (this.options.grid * 6));
 	return top + grid_base + (index * this.options.grid);
 }
