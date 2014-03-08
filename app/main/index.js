@@ -39,3 +39,5 @@ var appView = new AppView({scale: scale});
 context.add(modifier).add(appView);
 
 appView.start();
+
+

@@ -34,9 +34,11 @@ function _create(){
     
     
 	this.canvasModifier = new Modifier({
-        transform: Transform.translate(0, 0, -1)
+        transform: Transform.translate(0, 0, -1),
+        origin: [0,0]
     });
     this.canvasSurface = new CanvasSurface({
+    	size: [640,960],
     	properties: {position:"absolute"} //WHY did I have to do this?
     });
     this._add(this.canvasModifier).add(this.canvasSurface);

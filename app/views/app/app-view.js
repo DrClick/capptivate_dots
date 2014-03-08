@@ -20,6 +20,7 @@ function AppView() {
     this.anchors = [];
 
     _create.call(this);
+    _calcOffsets.call(this);
 }
 AppView.prototype = Object.create(View.prototype);
 AppView.prototype.constructor = AppView;
@@ -39,6 +40,20 @@ function _create(){
     _handleTouch.call(this);
 }//end create
 
+function _calcOffsets(){
+    var boardWidth = Board.boardSize * this.options.scale;
+    var dotWidth = Board.dotDiameter * this.options.scale;
+    var gridWidth = Board.gridSize * this.options.scale;
+    this.gridOffset = (boardWidth - 6*gridWidth);
+
+    var topBaseOffset = (160 + gridWidth + dotWidth/2) * this.options.scale;
+    var leftBaseOffset = (window.innerWidth - boardWidth)/2 + this.gridOffset;
+
+    this.topOffset = topBaseOffset;
+    this.leftOffset = leftBaseOffset;
+
+}
+
 function _handleTouch() {
     Board.boardView.pipe(this.sync);
 
@@ -52,29 +67,16 @@ function _handleTouch() {
 
 function _anchorLine(data){
     console.log("anchor start");
-
-    //calc the closest dot and the distance to that dot
     var initPos = [data.x, data.y];
-    var boardWidth = Board.boardSize * this.options.scale;
-    var dotWidth = Board.dotDiameter * this.options.scale;
     var gridWidth = Board.gridSize * this.options.scale;
-    var gridOffset = (boardWidth - 6*gridWidth);
-
-    var topBaseOffset = (160 + gridWidth + dotWidth/2) * this.options.scale;
-    var leftBaseOffset = (window.innerWidth - boardWidth)/2 + gridOffset;
-
-    var topOffset = topBaseOffset;
-    var leftOffset = leftBaseOffset;
 
     var dotIndex = [
-        Math.round((initPos[0] - leftOffset)/gridWidth),
-        Math.round((initPos[1] - topOffset)/gridWidth)
+        Math.round((initPos[0] - this.leftOffset)/gridWidth),
+        Math.round((initPos[1] - this.topOffset)/gridWidth)
     ];
-
-   
-    
-    this.anchors.push(dotIndex);
-
+    if(dotIndex[0] > -1 && dotIndex[0] < 6 && dotIndex[1] > -1 && dotIndex[1] < 6 ){
+        this.anchors.push(dotIndex);
+    }
 }
 
 function _dragStart(data){}
@@ -83,9 +85,23 @@ function _dragUpdate(data){
     
     console.log(data);
     this.touchPos = data.p;
+
+    if(this.anchors.length > 0){
+        debugger
+        var anchor = this.anchors[this.anchors.length-1];
+        var x = (Board.boardSize - 6 * Board.gridSize) + anchor[0] * Board.gridSize;
+        var y = 160 + (Board.boardSize - 6 * Board.gridSize) +  anchor[1]* Board.gridSize+ 20;
+
+        var context = Board.boardView.canvasSurface.getContext("2d");
+        context.clearRect(0,0,640, 960);
+        context.beginPath();
+        context.moveTo(x,y);
+        context.lineTo(x + data.p[0] / this.options.scale, y + data.p[1] / this.options.scale);
+        context.lineWidth = 8;
+        context.strokeStyle = Board.dots[anchor[1]][anchor[0]].options.color
+        context.stroke();
+    }//end if anchors
     
-    //TODO: hit dots
-    //TODO: draw vector
 }
 
 function _dragEnd(data){
@@ -93,6 +109,13 @@ function _dragEnd(data){
     var position = this.touchPos;
 
     console.log(position);
+
+    //reset the touch position
+    this.touchPos = [0,0];
+
+    if(this.anchors.length == 1){
+        this.anchors = [];
+    }
 
     //TO Remove connected dots
 }//end function
