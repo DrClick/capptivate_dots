@@ -46,7 +46,7 @@ function _calcOffsets(){
     var gridWidth = Board.gridSize * this.options.scale;
     this.gridOffset = (boardWidth - 6*gridWidth);
 
-    var topBaseOffset = (160 + gridWidth + dotWidth/2) * this.options.scale;
+    var topBaseOffset = 160 * this.options.scale + gridWidth + dotWidth/2;
     var leftBaseOffset = (window.innerWidth - boardWidth)/2 + this.gridOffset;
 
     this.topOffset = topBaseOffset;
