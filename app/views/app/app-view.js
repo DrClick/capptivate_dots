@@ -85,105 +85,119 @@ function _dragUpdate(data){
     
     this.touchPos = data.p;
 
+    //if no anchor, get out of here
+    if(this.anchors.length == 0){return;}
+
+
+
+    var anchor = this.anchors[this.anchors.length-1];
+    var currentDot = Board.dots[anchor[1]][anchor[0]];
+    var currentDotCenter = _getCenterOfDot(currentDot);
+    var neighbors = Board.getConnectableNeighbors(anchor);
+
     
-    //attach line to anchor
-    if(this.anchors.length > 0){
+    //this is the input length scaled to the scene
+    var scaledX = this.touchPos[0] / this.options.scale;
+    var scaledY = this.touchPos[1] / this.options.scale;
 
-        var anchor = this.anchors[this.anchors.length-1];
-        var currentDot = Board.dots[anchor[1]][anchor[0]];
-        var currentDotCenter = _getCenterOfDot(currentDot);
-        var neighbors = Board.getConnectableNeighbors(anchor);
 
-        
-        //this is the input length scaled to the scene
-        var scaledX = this.touchPos[0] / this.options.scale;
-        var scaledY = this.touchPos[1] / this.options.scale;
+    //determine if you are touching any of your neighbors
+    for (var i = neighbors.length - 1; i >= 0; i--) {
+        var neighbor = neighbors[i];
+        var centerOfNeighbor = _getCenterOfDot(neighbor);
 
-        for (var i = neighbors.length - 1; i >= 0; i--) {
-            var neighbor = neighbors[i];
-            var centerOfNeighbor = _getCenterOfDot(neighbor);
+        var delta = {
+            x: centerOfNeighbor.x - (currentDotCenter.x + scaledX),
+            y: centerOfNeighbor.y - (currentDotCenter.y + scaledY)
+        }
+        var distance = Math.sqrt(Math.pow(delta.x,2) + Math.pow(delta.y,2));
 
-            var delta = {
-                x: centerOfNeighbor.x - (currentDotCenter.x + scaledX),
-                y: centerOfNeighbor.y - (currentDotCenter.y + scaledY)
-            }
-            var distance = Math.sqrt(Math.pow(delta.x,2) + Math.pow(delta.y,2));
-
+        //if the pointer is close enough to a dot, its time to interact with the neighbor
+        if (distance < Board.dotDiameter * .8){
             
-            if (distance < Board.dotDiameter * .8){
+            var isBackTracking = false;
+            //check to see if the user is unwinding
+            if(this.anchors.length >= 2){
+                var previousDot = Board.getDot(this.anchors[this.anchors.length -2]);
+                if(previousDot.options.x == neighbor.options.x &&
+                    previousDot.options.y == neighbor.options.y){
+                    isBackTracking = true;
+                    //cut off the latest anchor
+                    this.anchors.pop();
+                }
+            }
+
+            if(!isBackTracking){
+                //reanchor to the new dot
                 neighbor.boing();
+                this.anchors.push([neighbor.options.x, neighbor.options.y]);
 
-                var isBackTracking = false;
-                //check to see if the user is unwinding
-                if(this.anchors.length >= 2){
-                    var previousDot = Board.getDot(this.anchors[this.anchors.length -2]);
-                    if(previousDot.options.x == neighbor.options.x &&
-                        previousDot.options.y == neighbor.options.y){
-                        isBackTracking = true;
-                        //cut off the latest anchor
-                        this.anchors.pop();
-                    }
-                }
-
-                if(!isBackTracking){
-                    //reanchor to the new dot
-                    this.anchors.push([neighbor.options.x, neighbor.options.y]);
-                }
-                
-                // console.log("delta", delta);
-                // console.log("currentPos", this.touchPos);
-                // console.log("neighbor", neighbor);
-
-                this.touchPos = [-delta.x * this.options.scale, -delta.y * this.options.scale];
-                
-                scaledX = this.touchPos[0] / this.options.scale;
-                scaledY = this.touchPos[1] / this.options.scale;
             }
-        };
+            
+            //reset to the new anchor
+            this.touchPos = [-delta.x * this.options.scale, -delta.y * this.options.scale];
+            scaledX = this.touchPos[0] / this.options.scale;
+            scaledY = this.touchPos[1] / this.options.scale;
+
+
+            //highlight the board if its a square
+            if(Board.determineIfSquare(this.anchors)){
+                Board.showIsSquare(currentDot.options.color);
+            }
+            else{
+                Board.clearIsSquare();
+            }
+        }
 
 
             
-            //reload all the variables in case a new dot was anchored
-            anchor = this.anchors[this.anchors.length-1];
-            if (!anchor) {return;}
-            currentDot = Board.dots[anchor[1]][anchor[0]];
-            currentDotCenter = _getCenterOfDot(currentDot);
+        //reload all the variables in case a new dot was anchored
+        anchor = this.anchors[this.anchors.length-1];
+        currentDot = Board.dots[anchor[1]][anchor[0]];
+        currentDotCenter = _getCenterOfDot(currentDot);
 
 
-            var context = Board.boardView.canvasSurface.getContext("2d");
-            context.clearRect(0,0,640, 960);
+        //redraw tje canvas
+        var context = Board.boardView.canvasSurface.getContext("2d");
+        context.clearRect(0,0,640, 960);
 
-        
-            for (var i = 0; i < this.anchors.length-1; i++) {
-                var a = Board.getDot(this.anchors[i]);
-                var b = Board.getDot(this.anchors[i + 1]);
-
-                // console.log("a", a.x, a.offset);
-                // console.log("b", b.x, b.offset);
-
-                context.beginPath();
-                context.moveTo(a.x + 320, a.offset + 20);
-                context.lineTo(b.x + 320, b.offset + 20);
-                context.lineWidth = 8;
-                context.strokeStyle = currentDot.options.color
-                context.stroke();
-            };
-
-
-            context.beginPath();
-            context.moveTo(currentDotCenter.x, currentDotCenter.y);
-            context.lineTo(currentDotCenter.x + scaledX, currentDotCenter.y + scaledY);
-            context.lineWidth = 8;
-            context.strokeStyle = currentDot.options.color
-            context.stroke();
+        _drawConnectedDots(context, currentDot.options.color, this.anchors);
+        _drawCurrentLine(context, currentDot.options.color, 
+            currentDotCenter, {x: scaledX, y: scaledY}
+        );
     }//end if anchors
     
 }
 
+function _drawConnectedDots(context, color, dotPointers){
+//draw the lines connecting neighbros    
+    for (var i = 0; i < dotPointers.length-1; i++) {
+        var a = Board.getDot(dotPointers[i]);
+        var b = Board.getDot(dotPointers[i + 1]);
+
+        context.beginPath();
+        context.moveTo(a.x + 320, a.offset + 20);
+        context.lineTo(b.x + 320, b.offset + 20);
+        context.lineWidth = 8;
+        context.strokeStyle = color;
+        context.stroke();
+    };
+}
+
+function _drawCurrentLine(context, color, currentDotCenter, pointerPos){
+    //draw the line connecting the pointer to the last anchor
+    context.beginPath();
+    context.moveTo(currentDotCenter.x, currentDotCenter.y);
+    context.lineTo(currentDotCenter.x + pointerPos.x, currentDotCenter.y + pointerPos.y);
+    context.lineWidth = 8;
+    context.strokeStyle = color
+    context.stroke();
+}
+
+
 function _getCenterOfDot(dot){
     return {x: dot.x + Board.boardSize/2, y: dot.offset + Board.dotDiameter/2};
 }
-
 
 
 function _dragEnd(data){
@@ -197,7 +211,7 @@ function _dragEnd(data){
         Board.score(this.anchors);
     }
 
-
+    Board.clearIsSquare();
     this.anchors = [];
 
     //TO Remove connected dots

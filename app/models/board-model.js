@@ -151,6 +151,31 @@ board.determineIfSquare = function(dotPointers){
     return isSquare;
 }
 
+
+board.showIsSquare = function(color){
+    this.boardView.surface.setProperties({
+        backgroundColor: color
+    });
+    this.boardView.modifier.setOpacity(.3);
+
+    var dotsOfAColor = _getDotsByColor.call(this, color);
+    
+    for (var i = dotsOfAColor.length - 1; i >= 0; i--) {
+        dotsOfAColor[i].boing();
+    };
+}
+
+
+
+
+board.clearIsSquare = function(){
+    this.boardView.surface.setProperties({
+        backgroundColor: "transparent"
+    });
+    this.boardView.modifier.setOpacity(1);
+}
+
+
 function _mapPointersToIndex(dotPointers){
     //takes an array of dot pointers and converts them to index (0-35)
     return dotPointers.map(function(point){ return point[1] * 6 + point[0]});
@@ -161,7 +186,19 @@ function _dotclickedHandler(){
 }
 
 
+function _getDotsByColor(color){
+    var dots = [];
+    for (var i = this.dots.length - 1; i >= 0; i--) {
+        for (var j = this.dots[0].length - 1; j >= 0; j--) {
+            var dot = this.dots[i][j];
+            if(dot.options.color == color){
+                dots.push(dot);
+            }
+        }
+    }
 
+    return dots;
+}
 
 
 module.exports = board;
