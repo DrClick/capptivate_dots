@@ -94,9 +94,20 @@ board.getConnectableNeighbors = function(position){
     return neighbors;
 }
 
+board.getDot = function(position){
+    return this.dots[position[1]][position[0]];
+}
+
+board.score = function(dots){
+    console.log(dots);
+}
+
+
+
 function _dotclickedHandler(){
 	console.log("dot clicked");
 }
+
 
 
 
