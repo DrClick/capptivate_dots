@@ -92,17 +92,9 @@ function _dragUpdate(data){
         var anchor = this.anchors[this.anchors.length-1];
         var currentDot = Board.dots[anchor[1]][anchor[0]];
         var currentDotCenter = _getCenterOfDot(currentDot);
-        var neighbors = [];
+        var neighbors = Board.getConnectableNeighbors(anchor);
 
-        //only 4 ways to hit another dot, NSEW and same color
-        if(anchor[0] - 1 >= 0 && Board.dots[anchor[1]][anchor[0] - 1].options.color == currentDot.options.color)
-            {neighbors.push(Board.dots[anchor[1]][anchor[0] - 1]);}//N
-        if(anchor[0] + 1 <= 5 && Board.dots[anchor[1]][anchor[0] + 1].options.color == currentDot.options.color)
-            {neighbors.push(Board.dots[anchor[1]][anchor[0] + 1]);}//S
-        if(anchor[1] + 1 <= 5 && Board.dots[anchor[1] + 1][anchor[0]].options.color == currentDot.options.color)
-            {neighbors.push(Board.dots[anchor[1] + 1][anchor[0]]);}//E
-        if(anchor[1] - 1 >= 0 && Board.dots[anchor[1] - 1][anchor[0]].options.color == currentDot.options.color)
-            {neighbors.push(Board.dots[anchor[1] - 1][anchor[0]]);}//W
+        
         
 
         //console.log(neighbors);
@@ -164,6 +156,8 @@ function _dragUpdate(data){
 function _getCenterOfDot(dot){
     return {x: dot.x + Board.boardSize/2, y: dot.offset + Board.dotDiameter/2};
 }
+
+
 
 function _dragEnd(data){
     var velocity = data.v;

@@ -74,6 +74,26 @@ board.reset = function(){
 	}//end if initizlized
 }//end reset
 
+board.getConnectableNeighbors = function(position){
+    var neighbors = [];
+    var x = position[0];
+    var y = position[1];
+    var currentDot = this.dots[y][x];
+
+
+    //only 4 ways to hit another dot, NSEW and same color
+    if(x - 1 >= 0 && this.dots[y][x - 1].options.color == currentDot.options.color)
+        {neighbors.push(this.dots[y][x - 1]);}//N
+    if(x + 1 <= 5 && this.dots[y][x + 1].options.color == currentDot.options.color)
+        {neighbors.push(this.dots[y][x + 1]);}//S
+    if(y + 1 <= 5 && this.dots[y + 1][x].options.color == currentDot.options.color)
+        {neighbors.push(this.dots[y + 1][x]);}//E
+    if(y - 1 >= 0 && this.dots[y - 1][x].options.color == currentDot.options.color)
+        {neighbors.push(this.dots[y - 1][x]);}//W
+
+    return neighbors;
+}
+
 function _dotclickedHandler(){
 	console.log("dot clicked");
 }
