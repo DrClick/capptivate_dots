@@ -16,16 +16,17 @@ var WallTransition  	= require("famous/transitions/wall-transition");
 function Dot () {
     View.apply(this, arguments);
     this.colors = {
-    	green: "#89e88f",
+    	green: "rgba(137,232,144,1)",
     	purple: "#975db5",
     	blue: "#89bbff",
     	red: "#ea5d45",
     	yellow: "#e7dd00",
 	};
 
-	this.visible = false;
-	this.position = new Transitionable(this.options.stage);
-	this.highlightScale = new Transitionable(1);
+	this.visible 			= false;
+	this.position 			= new Transitionable(this.options.stage);
+	this.highlightScale 	= new Transitionable(1);
+	this.dotScale 			= new Transitionable(1);
 	
 	_create.call(this); 
 }
@@ -39,7 +40,8 @@ Dot.DEFAULT_OPTIONS = {
 	baseAnimationTime: 100,
 	diameter: 40,
 	highlightScale: 2.5,
-	highlightDuration: 400
+	highlightDuration: 400,
+	hideDuration: 100
 };
 
 
@@ -92,6 +94,10 @@ Dot.prototype.boing = function(){
 	this.highlightScale.set(this.options.highlightScale,{duration: this.options.highlightDuration});
 }
 
+Dot.prototype.shrink = function(){
+	this.dotScale.set(.01,{duration: this.options.hideDuration});
+}
+
 function _clickHandler(evt){
 	console.log(this);
 	this._eventOutput.emit("clicked");
@@ -123,15 +129,25 @@ Dot.prototype.render = function(){
 		if(position > this.offset){
 			position = this.offset;
 		}
+ 
+		
 
-		//add the dot
+		//if the dot is being highlighted, show it
+		var dotScale = this.dotScale.get();
+		var dotPos = position + (this.options.diameter - this.options.diameter*dotScale)/2;
 		spec.push({
-			transform : Transform.translate(this.x, position, 3),
+			transform : Transform.multiply(
+				Transform.translate(this.x, dotPos, 3),
+				Transform.scale(dotScale,dotScale,1)),
 			target : this.surface.render(),
 			origin: [.5,0]
 		});
+		
 
-		if(position == this.offset){
+
+		//if the dot is being highlighted, show it
+		var highlightScale = this.highlightScale.get();
+		if(highlightScale > 1){
 			//add the highlight
 			var highlightScale = this.highlightScale.get();
 			if(highlightScale != this.options.highlightScale){

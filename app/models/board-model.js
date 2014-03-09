@@ -98,8 +98,12 @@ board.getDot = function(position){
     return this.dots[position[1]][position[0]];
 }
 
-board.score = function(dots){
-    console.log(dots);
+board.score = function(dotPointers){
+    console.log(dotPointers);
+    for (var i = 0; i < dotPointers.length; i++) {
+        var dot = this.getDot(dotPointers[i]);
+        dot.shrink();
+    };
 }
 
 
