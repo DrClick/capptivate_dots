@@ -107,20 +107,24 @@ board.calculateWhichDotsToRemove = function(dotPointers){
     //simple is to remove only the ones selected
     //more complicated is having to remove all of the ones of the same color
     //and anything contained in the square
-    for (var i = 0; i < dotPointers.length; i++) {
-        var dot = this.getDot(dotPointers[i]);
-        dot.shrink();
-    };
-
+    
+    var dotsToRemove = [];
     var isSquare = this.determineIfSquare(dotPointers);
 
     if(isSquare){
-        alert("SQUARE");
+        var color = this.getDot(dotPointers[0]).options.color;
+        dotsToRemove = _getDotsByColor.call(this, color);
+    }
+    else{
+        for (var i = 0; i < dotPointers.length; i++) {
+            dotsToRemove.push(this.getDot(dotPointers[i]));
+        }
     }
 
-
-
-
+    //remove them
+    for (var i = dotsToRemove.length - 1; i >= 0; i--) {
+        dotsToRemove[i].shrink();
+    };
 }
 
 board.determineIfSquare = function(dotPointers){
