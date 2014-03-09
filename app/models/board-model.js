@@ -99,14 +99,62 @@ board.getDot = function(position){
 }
 
 board.score = function(dotPointers){
-    console.log(dotPointers);
+    this.calculateWhichDotsToRemove(dotPointers);
+}
+
+board.calculateWhichDotsToRemove = function(dotPointers){
+
+    //simple is to remove only the ones selected
+    //more complicated is having to remove all of the ones of the same color
+    //and anything contained in the square
     for (var i = 0; i < dotPointers.length; i++) {
         var dot = this.getDot(dotPointers[i]);
         dot.shrink();
     };
+
+    var isSquare = this.determineIfSquare(dotPointers);
+
+    if(isSquare){
+        alert("SQUARE");
+    }
+
+
+
+
 }
 
+board.determineIfSquare = function(dotPointers){
+    var dotNumbers = _mapPointersToIndex(dotPointers);
+    
+    //find duplicates in linear time
+    var sum = 0;
+    var isSquare = false;
 
+    for (var i = 0; i < dotNumbers.length; i++) {
+        var dot = dotNumbers[i];
+        //flip the nth bit corresponding to its number in the index
+        var bitDot = Math.pow(2, dot);
+
+        //if the running sum bitwise add = 0, not a repeat
+        console.log("bitwise sum and dot", sum.toString(2), bitDot.toString(2))
+        
+        if ((sum & bitDot) == 0){
+            sum = sum | bitDot;
+        }
+        else
+        {
+            isSquare = true;
+            break;
+        }
+    }
+
+    return isSquare;
+}
+
+function _mapPointersToIndex(dotPointers){
+    //takes an array of dot pointers and converts them to index (0-35)
+    return dotPointers.map(function(point){ return point[1] * 6 + point[0]});
+}
 
 function _dotclickedHandler(){
 	console.log("dot clicked");

@@ -130,9 +130,9 @@ function _dragUpdate(data){
                     this.anchors.push([neighbor.options.x, neighbor.options.y]);
                 }
                 
-                console.log("delta", delta);
-                console.log("currentPos", this.touchPos);
-                console.log("neighbor", neighbor);
+                // console.log("delta", delta);
+                // console.log("currentPos", this.touchPos);
+                // console.log("neighbor", neighbor);
 
                 this.touchPos = [-delta.x * this.options.scale, -delta.y * this.options.scale];
                 
@@ -158,8 +158,8 @@ function _dragUpdate(data){
                 var a = Board.getDot(this.anchors[i]);
                 var b = Board.getDot(this.anchors[i + 1]);
 
-                console.log("a", a.x, a.offset);
-                console.log("b", b.x, b.offset);
+                // console.log("a", a.x, a.offset);
+                // console.log("b", b.x, b.offset);
 
                 context.beginPath();
                 context.moveTo(a.x + 320, a.offset + 20);

@@ -95,7 +95,12 @@ Dot.prototype.boing = function(){
 }
 
 Dot.prototype.shrink = function(){
-	this.dotScale.set(.001,{duration: this.options.hideDuration});
+	this.dotScale.set(.001,
+		{duration: this.options.hideDuration}, 
+		function(){
+			this._eventOutput.emit("hidden");
+		}.bind(this)
+	);
 }
 
 function _clickHandler(evt){
@@ -144,10 +149,11 @@ Dot.prototype.render = function(){
 		});
 		
 
-		
+		//add the highlight if it is being highlighted. This highlight effect will need
+		//to be scaled to the dotscale above (if it is being hidden)
 		if(this.highlightScale.get() > 1){
 			var highlightScale = this.highlightScale.get() * dotScale;
-			//add the highlight
+			
 			if(highlightScale != this.options.highlightScale){
 				var highlightPos = position - (highlightScale * this.options.diameter - this.options.diameter)/2;
 				spec.push({
