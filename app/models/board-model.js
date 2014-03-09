@@ -113,10 +113,11 @@ board.score = function(dotPointers){
         }.bind(this, dot), 0);
     };
 
-    //redrop the board
+    //redrop the board //NOTE: this needs a bit so the above update 
+    //boards can complete. At timeout 0, it can produce errors.
     Timer.setTimeout(function(){
         this.drop();
-    }.bind(this),0);
+    }.bind(this),100);
 }
 
 function _updateBoard(dot, isSquareUpdate){
