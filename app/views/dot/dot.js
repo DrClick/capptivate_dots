@@ -41,7 +41,7 @@ Dot.DEFAULT_OPTIONS = {
 	diameter: 40,
 	highlightScale: 2.5,
 	highlightDuration: 400,
-	hideDuration: 100
+	hideDuration: 200
 };
 
 
@@ -95,7 +95,7 @@ Dot.prototype.boing = function(){
 }
 
 Dot.prototype.shrink = function(){
-	this.dotScale.set(.01,{duration: this.options.hideDuration});
+	this.dotScale.set(.001,{duration: this.options.hideDuration});
 }
 
 function _clickHandler(evt){
@@ -144,12 +144,10 @@ Dot.prototype.render = function(){
 		});
 		
 
-
-		//if the dot is being highlighted, show it
-		var highlightScale = this.highlightScale.get();
-		if(highlightScale > 1){
+		
+		if(this.highlightScale.get() > 1){
+			var highlightScale = this.highlightScale.get() * dotScale;
 			//add the highlight
-			var highlightScale = this.highlightScale.get();
 			if(highlightScale != this.options.highlightScale){
 				var highlightPos = position - (highlightScale * this.options.diameter - this.options.diameter)/2;
 				spec.push({
