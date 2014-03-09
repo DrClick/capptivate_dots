@@ -15,15 +15,7 @@ var WallTransition  	= require("famous/transitions/wall-transition");
  */
 function Dot () {
     View.apply(this, arguments);
-    this.colors = {
-    	green: "rgba(137,232,144,1)",
-    	purple: "#975db5",
-    	blue: "#89bbff",
-    	red: "#ea5d45",
-    	yellow: "#e7dd00",
-	};
-
-	this.visible 			= false;
+   	this.visible 			= false;
 	this.position 			= new Transitionable(this.options.stage);
 	this.highlightScale 	= new Transitionable(1);
 	this.dotScale 			= new Transitionable(1);
@@ -51,7 +43,7 @@ function _create(){
         size: [this.options.diameter, this.options.diameter],
         properties: {
             borderRadius: this.options.diameter/2 + "px",
-            backgroundColor: this.colors[this.options.color]
+            backgroundColor: this.options.color
         }
     });
 
@@ -60,7 +52,7 @@ function _create(){
         size: [this.options.diameter, this.options.diameter],
         properties: {
             borderRadius: this.options.diameter/2 + "px",
-            backgroundColor: this.colors[this.options.color]
+            backgroundColor: this.options.color
         }
     });
 
@@ -73,9 +65,10 @@ function _create(){
    
 }//end create
 
-Dot.prototype.drop = function(index){
-	this.offset = _calcOffset.call(this, index, true);
-	var duration = this.options.baseAnimationTime * index;
+Dot.prototype.drop = function(){
+	var dropPos = this.options.y;
+	this.offset = _calcOffset.call(this, dropPos, true, this.options.visible);
+	var duration = this.options.baseAnimationTime * dropPos;
 
 	this.visible = true;
 
@@ -113,16 +106,28 @@ function _clickHandler(evt){
 
 
 
-function _calcOffset(index, verticle){
-	var top = verticle ? 160 : -this.options.board/2;
+function _calcOffset(index, verticle, visible){
+	var verticleOffset = visible ? 0: 160;
+	var baseOffset = verticle ? verticleOffset : -this.options.board/2;
 	var grid_base = (this.options.board - (this.options.grid * 6));
-	return top + grid_base + (index * this.options.grid);
+	return baseOffset + grid_base + (index * this.options.grid);
 }
 
 
-Dot.prototype.reset = function(){
+Dot.prototype.reset = function(x, y, color){
 	this.position.set(0);
 	this.visible = false;
+
+	this.options.color = color;
+	this.options.x = x;
+	this.options.y = y;
+
+	this.position.set(this.options.stage);
+	this.highlightScale.set(1);
+	this.dotScale.set(1);
+	this.surface.setProperties({backgroundColor: color});
+	this.highlightSurface.setProperties({backgroundColor: color});
+
 }
 
 Dot.prototype.render = function(){

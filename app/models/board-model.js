@@ -7,7 +7,7 @@ var board = {
 
 	initialized : false,
 	dots : [[],[],[],[],[],[]],
-	colors : ["red", "blue", "yellow", "purple", "green"],
+	colors : ["rgba(137,232,144,1)", "#975db5", "#89bbff", "#ea5d45", "#e7dd00"],
 	gridSize: 90,
 	boardSize: 640,
 	dotDiameter: 40,
@@ -54,14 +54,15 @@ board.drop = function(){
         function(){
             if(currentRow >= 0){
                 for (var i = 0; i < 6; i++) {
-                    this.dots[currentRow][i].drop(currentRow);
+                    var dotToDrop = this.dots[currentRow][i];
+                    dotToDrop.drop();
                 }
                 currentRow--;
             }//end if in range
             else{
                 Timer.clear(buildInterval);
             }
-        }.bind(this),100);
+        }.bind(this),0);
 }//end drop
 
 board.reset = function(){
@@ -99,17 +100,58 @@ board.getDot = function(position){
 }
 
 board.score = function(dotPointers){
-    this.calculateWhichDotsToRemove(dotPointers);
+    var isSquare = this.determineIfSquare(dotPointers);
+    var dotsToRemove = this.calculateWhichDotsToRemove(dotPointers, isSquare);
+
+
+    //shrink them
+    for (var i = dotsToRemove.length - 1; i >= 0; i--) {
+        var dot = dotsToRemove[i];
+        Timer.setTimeout(function(d){
+            d.shrink();
+            _updateBoard.call(this, d, isSquare);
+        }.bind(this, dot), 0);
+    };
+
+    //redrop the board
+    Timer.setTimeout(function(){
+        this.drop();
+    }.bind(this),0);
 }
 
-board.calculateWhichDotsToRemove = function(dotPointers){
+function _updateBoard(dot, isSquareUpdate){
+    var dotRow = dot.options.y;
+    var dotColumn = dot.options.x;
+
+    //change the row of all dots above it
+    for (var i = dotRow - 1; i >= 0; i--) {
+        var dotToUpdate = this.dots[i][dotColumn];
+        //update the dots property
+        dotToUpdate.options.y++;
+
+        //move it in the matrix
+        this.dots[i+1][dotColumn] = dotToUpdate
+    };
+
+    //get a new random color, but if square update, dont allow
+    //the same color
+    var color = this.colors[Math.round(Math.random() * 4)];
+    while(isSquareUpdate && color == dot.options.color){
+        color = this.colors[Math.round(Math.random() * 4)];
+        console.log(color);
+    }
+
+    dot.reset(dot.options.x, 0, color);
+    this.dots[0][dotColumn] = dot;
+}
+
+board.calculateWhichDotsToRemove = function(dotPointers, isSquare){
 
     //simple is to remove only the ones selected
     //more complicated is having to remove all of the ones of the same color
     //and anything contained in the square
     
     var dotsToRemove = [];
-    var isSquare = this.determineIfSquare(dotPointers);
 
     if(isSquare){
         var color = this.getDot(dotPointers[0]).options.color;
@@ -121,10 +163,7 @@ board.calculateWhichDotsToRemove = function(dotPointers){
         }
     }
 
-    //remove them
-    for (var i = dotsToRemove.length - 1; i >= 0; i--) {
-        dotsToRemove[i].shrink();
-    };
+    return dotsToRemove;
 }
 
 board.determineIfSquare = function(dotPointers){
