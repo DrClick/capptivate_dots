@@ -88,12 +88,18 @@ Dot.prototype.drop = function(index){
     );	
 }
 
+Dot.prototype.boing = function(){
+	this.highlightScale.set(this.options.highlightScale,{duration: this.options.highlightDuration});
+}
+
 function _clickHandler(evt){
 	console.log(this);
 	this._eventOutput.emit("clicked");
 
-	this.highlightScale.set(this.options.highlightScale,{duration: this.options.highlightDuration});	
+	this.boing();	
 }
+
+
 
 
 function _calcOffset(index, verticle){

@@ -34,7 +34,7 @@ board.init = function(){
             var colorIndex = Math.round(Math.random() * 4);
             var color = this.colors[colorIndex];
             
-            var dot = new Dot({x:i, color: color});
+            var dot = new Dot({x:i, y: j, color: color});
 
             dot.on("clicked", _dotclickedHandler.bind(this));
             this.dots[j].push(dot);

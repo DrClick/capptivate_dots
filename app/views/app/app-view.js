@@ -83,25 +83,86 @@ function _dragStart(data){}
 
 function _dragUpdate(data){
     
-    console.log(data);
     this.touchPos = data.p;
 
+    
+    //attach line to anchor
     if(this.anchors.length > 0){
-        debugger
-        var anchor = this.anchors[this.anchors.length-1];
-        var x = (Board.boardSize - 6 * Board.gridSize) + anchor[0] * Board.gridSize;
-        var y = 160 + (Board.boardSize - 6 * Board.gridSize) +  anchor[1]* Board.gridSize+ 20;
 
-        var context = Board.boardView.canvasSurface.getContext("2d");
-        context.clearRect(0,0,640, 960);
-        context.beginPath();
-        context.moveTo(x,y);
-        context.lineTo(x + data.p[0] / this.options.scale, y + data.p[1] / this.options.scale);
-        context.lineWidth = 8;
-        context.strokeStyle = Board.dots[anchor[1]][anchor[0]].options.color
-        context.stroke();
+        var anchor = this.anchors[this.anchors.length-1];
+        var currentDot = Board.dots[anchor[1]][anchor[0]];
+        var currentDotCenter = _getCenterOfDot(currentDot);
+        var neighbors = [];
+
+        //only 4 ways to hit another dot, NSEW and same color
+        if(anchor[0] - 1 >= 0 && Board.dots[anchor[1]][anchor[0] - 1].options.color == currentDot.options.color)
+            {neighbors.push(Board.dots[anchor[1]][anchor[0] - 1]);}//N
+        if(anchor[0] + 1 <= 5 && Board.dots[anchor[1]][anchor[0] + 1].options.color == currentDot.options.color)
+            {neighbors.push(Board.dots[anchor[1]][anchor[0] + 1]);}//S
+        if(anchor[1] + 1 <= 5 && Board.dots[anchor[1] + 1][anchor[0]].options.color == currentDot.options.color)
+            {neighbors.push(Board.dots[anchor[1] + 1][anchor[0]]);}//E
+        if(anchor[1] - 1 >= 0 && Board.dots[anchor[1] - 1][anchor[0]].options.color == currentDot.options.color)
+            {neighbors.push(Board.dots[anchor[1] - 1][anchor[0]]);}//W
+        
+
+        //console.log(neighbors);
+        //this is the input length scaled to the scene
+        var scaledX = this.touchPos[0] / this.options.scale;
+        var scaledY = this.touchPos[1] / this.options.scale;
+
+        for (var i = neighbors.length - 1; i >= 0; i--) {
+            var neighbor = neighbors[i];
+            var centerOfNeighbor = _getCenterOfDot(neighbor);
+
+            var delta = {
+                x: centerOfNeighbor.x - (currentDotCenter.x + scaledX),
+                y: centerOfNeighbor.y - (currentDotCenter.y + scaledY)
+            }
+            var distance = Math.sqrt(Math.pow(delta.x,2) + Math.pow(delta.y,2));
+
+            
+            if (distance < Board.dotDiameter * .8){
+                neighbor.boing();
+
+                //reanchor to the new dot
+
+                this.anchors.push([neighbor.options.x, neighbor.options.y]);
+                
+                console.log("delta", delta);
+                console.log("currentPos", this.touchPos);
+                console.log("neighbor", neighbor);
+
+                this.touchPos = [-delta.x * this.options.scale, -delta.y * this.options.scale];
+                
+                scaledX = this.touchPos[0] / this.options.scale;
+                scaledY = this.touchPos[1] / this.options.scale;
+            }
+        };
+
+
+        Timer.setTimeout(function(){
+            
+            //reload all the variables in case a new dot was anchored
+            anchor = this.anchors[this.anchors.length-1];
+            currentDot = Board.dots[anchor[1]][anchor[0]];
+            currentDotCenter = _getCenterOfDot(currentDot);
+
+
+            var context = Board.boardView.canvasSurface.getContext("2d");
+            context.clearRect(0,0,640, 960);
+            context.beginPath();
+            context.moveTo(currentDotCenter.x, currentDotCenter.y);
+            context.lineTo(currentDotCenter.x + scaledX, currentDotCenter.y + scaledY);
+            context.lineWidth = 8;
+            context.strokeStyle = currentDot.options.color
+            context.stroke();
+        }.bind(this),0)
     }//end if anchors
     
+}
+
+function _getCenterOfDot(dot){
+    return {x: dot.x + Board.boardSize/2, y: dot.offset + Board.dotDiameter/2};
 }
 
 function _dragEnd(data){
