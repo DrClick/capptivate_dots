@@ -49,18 +49,24 @@ function _constructScene(){
     this.header = new HeaderView({scale: this.options.scale});
     this.footer = new FooterView({scale: this.options.scale});
 
+
+    var windowHeight = window.innerHeight;
+    var appHeight = 960 * this.options.scale;
+
+    this.headerOffset = windowHeight-appHeight;
+
     //add views
     this._add(Board.boardView);
 
     this.headerModifier = new Modifier(
         {
-            transform: Transform.translate(0,-100,4),
+            transform: Transform.translate(0,-160 - this.headerOffset,4),
             origin: [.5,0]
         }
     );
     this.footerModifier = new Modifier(
         {
-            transform: Transform.translate(0, 100,4),
+            transform: Transform.translate(0, 160 + this.headerOffset,4),
             origin: [.5,1]
         }
     );
@@ -263,10 +269,10 @@ AppView.prototype.start = function(){
     Board.init();
     
     this.headerModifier.setTransform(
-        Transform.translate(0,-16,4),
+        Transform.translate(0, - this.headerOffset,4),
         {curve: "easeOutBounce", duration:300});
     this.footerModifier.setTransform(
-        Transform.translate(0,16,4),
+        Transform.translate(0,this.headerOffset,4),
         {curve: "easeOutBounce", duration:300});
 
     Timer.setTimeout(function(){Board.drop()}, 400);

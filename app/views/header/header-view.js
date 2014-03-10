@@ -14,36 +14,36 @@ function HeaderView () {
     View.apply(this, arguments);
 
     var surface = new Surface({ 
-        size: [window.innerWidth/this.options.scale,60], 
+        size: [window.innerWidth/this.options.scale,120], 
         properties: { backgroundColor: '#efefef' } 
     });
 
     this._add( surface );
 
     this.templates = {
-    	score: "<label>Score </label> ",
-    	moves: "<label>Moves left </label> "
+    	score: "<label>Score</label>&nbsp;&nbsp;",
+    	moves: "<label>Moves left</label>&nbsp;&nbsp;"
     };
 
     this.score = new Surface({
-    	size: [320, 40],
+    	size: [320, 120],
     	classes: ["header"],
     	properties: {textAlign:"center"}
     });
 
     this.moves = new Surface({
-    	size: [320, 40],
+    	size: [320, 120],
     	classes: ["header"],
     	properties: {textAlign:"center"}
     });
 
     this._add(new Modifier({
-    	transform:Transform.translate(-160,15,1), 
+    	transform:Transform.translate(-160,45,1), 
     	origin: [.5,0]
     })).add(this.moves);
 
     this._add(new Modifier({
-    	transform:Transform.translate(160,15,1), 
+    	transform:Transform.translate(160,45,1), 
     	origin: [.5,0]
     })).add(this.score);
     
