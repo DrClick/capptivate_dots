@@ -47,17 +47,17 @@ function FooterView () {
     });
 
     this._add(new Modifier({
-    	transform:Transform.translate(-213.33,45,1), 
+    	transform:Transform.translate(-173.33,45,1), 
     	origin: [.5,1]
     })).add(this.power_1);
 
     this._add(new Modifier({
-    	transform:Transform.translate(0,45,1), 
+    	transform:Transform.translate(40,45,1), 
     	origin: [.5,1]
     })).add(this.power_2);
 
     this._add(new Modifier({
-    	transform:Transform.translate(213.33,45,1), 
+    	transform:Transform.translate(253.33,45,1), 
     	origin: [.5,1]
     })).add(this.power_3);
     
