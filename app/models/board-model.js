@@ -19,10 +19,10 @@ board.init = function(){
 	this.initialized = true;
 	
 	//wire up event in and out
-	this._eventInput = new EventHandler();
-    this._eventOutput = new EventHandler();
-    EventHandler.setInputHandler(this, this._eventInput);
-    EventHandler.setOutputHandler(this, this._eventOutput);
+	this.eventInput = new EventHandler();
+    this.eventOutput = new EventHandler();
+    EventHandler.setInputHandler(this, this.eventInput);
+    EventHandler.setOutputHandler(this, this.eventOutput);
 
 
     //create the board
@@ -34,7 +34,6 @@ board.init = function(){
             
             var dot = new Dot({x:i, y: j, color: color});
 
-            dot.on("clicked", _dotclickedHandler.bind(this));
             this.dots[j].push(dot);
             this.boardView._add(dot);
 
@@ -110,6 +109,8 @@ board.score = function(dotPointers){
         
     };
 
+    this.boardView.emit("moveCompleted", {points: dotsToRemove.length});
+
     //redrop the board 
     Timer.setTimeout(function(){
         this.drop();
@@ -141,19 +142,25 @@ board.determineIfSquare = function(dotPointers){
     var dotNumbers = _mapPointersToIndex(dotPointers);
     
     //find duplicates in linear time
-    var sum = 0;
+    var sum = {upper: 0, lower: 0};
     var isSquare = false;
 
     for (var i = 0; i < dotNumbers.length; i++) {
         var dot = dotNumbers[i];
+        
         //flip the nth bit corresponding to its number in the index
+        //because javascript is 32 bit, we have to break board into
+        //two halfs
+        var whichHalf = (dot > 15) ? "upper": "lower";
+        dot = dot % 16;
+
         var bitDot = Math.pow(2, dot);
 
         //if the running sum bitwise add = 0, not a repeat
-        console.log("bitwise sum and dot", sum.toString(2), bitDot.toString(2))
+        //console.log("bitwise sum and dot", sum.toString(2), bitDot.toString(2))
         
-        if ((sum & bitDot) == 0){
-            sum = sum | bitDot;
+        if ((sum[whichHalf] & bitDot) == 0){
+            sum[whichHalf] = sum[whichHalf] | bitDot;
         }
         else
         {
@@ -185,11 +192,6 @@ board.clearIsSquare = function(){
         backgroundColor: "transparent"
     });
     this.boardView.modifier.setOpacity(1);
-}
-
-
-function _dotclickedHandler(){
-	console.log("dot clicked");
 }
 
 
@@ -231,7 +233,6 @@ function _updateBoard(dot, isSquareUpdate){
     var color = this.colors[Math.round(Math.random() * 4)];
     while(isSquareUpdate && color == dot.options.color){
         color = this.colors[Math.round(Math.random() * 4)];
-        console.log(color);
     }
 
     dot.reset(dot.options.x, 0, color);

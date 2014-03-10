@@ -14,7 +14,7 @@ function FooterView () {
     View.apply(this, arguments);
 
    var surface = new Surface({ 
-        size: [window.innerWidth,60], properties: { backgroundColor: '#efefef' } 
+        size: [window.innerWidth/this.options.scale,60], properties: { backgroundColor: '#efefef' } 
     });
 
     this._add( surface );

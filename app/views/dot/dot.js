@@ -97,14 +97,9 @@ Dot.prototype.shrink = function(){
 }
 
 function _clickHandler(evt){
-	console.log(this);
 	this._eventOutput.emit("clicked");
-
 	this.boing();	
 }
-
-
-
 
 function _calcOffset(index, verticle, visible){
 	var verticleOffset = visible ? 0: 160;

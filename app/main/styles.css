@@ -1,6 +1,11 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300);
+
 html {
     background-color: #ffffff;
     color: #000;
+    font-family: 'Lato';
+    font-weight: 300;
+    font-size: 30px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -15,4 +20,11 @@ html {
 
 .foo {
 	background-color: red;
+}
+
+.header *{
+    vertical-align: middle;
+}
+.header label{
+    font-size: 18px;
 }

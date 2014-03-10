@@ -29,14 +29,24 @@ AppView.DEFAULT_OPTIONS = {};
 
 function _create(){
     //properties
-    this.touchPos = [];
+    this.touchPos = [0,0];
     this.anchors = [];
     this.score = 0;
     this.powerUps = {addCounter: 3, shrink: 12, remove: 4};
-    this.counter = 30; //Moves or timer
+    this.counter = 999; //Moves or timer
 
-    this.header = new HeaderView();
-    this.footer = new FooterView();
+        
+    Board.init();
+
+    _constructScene.call(this);
+    _handleTouch.call(this);
+    _handleBoardEvents.call(this);
+    _updateHeader.call(this);
+}//end create
+
+function _constructScene(){
+    this.header = new HeaderView({scale: this.options.scale});
+    this.footer = new FooterView({scale: this.options.scale});
 
     //add views
     this._add(Board.boardView);
@@ -55,17 +65,7 @@ function _create(){
     );
     this._add(this.headerModifier).add(this.header);
     this._add(this.footerModifier).add(this.footer);
-
-
-    //create syncs to handle updates
-    this.touchPos = [0,0]
-    this.sync = new GenericSync(function() {
-        return this.touchPos;
-    }.bind(this), {syncClasses:[MouseSync, TouchSync]});
-       
-
-    _handleTouch.call(this);
-}//end create
+}
 
 function _calcOffsets(){
     var boardWidth = Board.boardSize * this.options.scale;
@@ -82,6 +82,10 @@ function _calcOffsets(){
 }
 
 function _handleTouch() {
+    this.sync = new GenericSync(function() {
+        return this.touchPos;
+    }.bind(this), {syncClasses:[MouseSync, TouchSync]});
+
     Board.boardView.pipe(this.sync);
 
     //Board.boardView.on("touchstart", _anchorLine.bind(this));
@@ -92,8 +96,22 @@ function _handleTouch() {
     this.sync.on('end', _dragEnd.bind(this));
 }
 
+function _handleBoardEvents(){
+    console.log("I am here");
+    Board.boardView.on("moveCompleted", function(points){
+        alert("WTF");
+        this.score += points;
+        this.counter--;
+        _updateHeader.call(this);
+    }.bind(this));
+}
+
+function _updateHeader(){
+    console.log("update", this.score, this.counter);
+    this.header.update({score:this.score, moves: this.counter});
+}
+
 function _anchorLine(data){
-    console.log("anchor start");
     var initPos = [data.x, data.y];
     var gridWidth = Board.gridSize * this.options.scale;
 
