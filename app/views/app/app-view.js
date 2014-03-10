@@ -95,7 +95,7 @@ function _handleTouch() {
 
     Board.boardView.pipe(this.sync);
 
-    //Board.boardView.on("touchstart", _anchorLine.bind(this));
+    Board.boardView.on("touchstart", _anchorLine.bind(this));
     Board.boardView.on("mousedown", _anchorLine.bind(this));
 
     this.sync.on('start', _dragStart.bind(this));
@@ -114,7 +114,8 @@ function _updateHeader(points){
 }
 
 function _anchorLine(data){
-    var initPos = [data.x, data.y];
+    console.log(data);
+    var initPos = [data.pageX, data.pageY];
     var gridWidth = Board.gridSize * this.options.scale;
 
     var dotIndex = [
