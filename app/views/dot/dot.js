@@ -58,7 +58,7 @@ function _create(){
 
 
     this.surface.on("mousedown", _clickHandler.bind(this));
-    //this.surface.on("touchstart", _clickHandler.bind(this));
+    this.surface.on("touchstart", _clickHandler.bind(this));
     this.surface.pipe(this._eventOutput);
 
     this.x = _calcOffset.call(this, this.options.x, false);

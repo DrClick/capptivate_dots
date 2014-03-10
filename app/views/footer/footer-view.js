@@ -18,6 +18,48 @@ function FooterView () {
     });
 
     this._add( surface );
+
+    this.power_1 = new Surface({
+    	size: [213.33, 120],
+    	classes: ["footer"],
+    	content: "0",
+    	properties: {
+    		backgroundImage: "url('/original_project/app/views/footer/dots_power_1.png')"
+    	}
+    });
+
+    this.power_2 = new Surface({
+    	size: [213.33, 120],
+    	classes: ["footer"],
+    	content: "0",
+    	properties: {
+    		backgroundImage: "url('/original_project/app/views/footer/dots_power_2.png')"
+    	}
+    });
+
+    this.power_3 = new Surface({
+    	size: [213.33, 120],
+    	classes: ["footer"],
+    	content: "0",
+    	properties: {
+    		backgroundImage: "url('/original_project/app/views/footer/dots_power_3.png')"
+    	}
+    });
+
+    this._add(new Modifier({
+    	transform:Transform.translate(-213.33,45,1), 
+    	origin: [.5,1]
+    })).add(this.power_1);
+
+    this._add(new Modifier({
+    	transform:Transform.translate(0,45,1), 
+    	origin: [.5,1]
+    })).add(this.power_2);
+
+    this._add(new Modifier({
+    	transform:Transform.translate(213.33,45,1), 
+    	origin: [.5,1]
+    })).add(this.power_3);
     
 }
 

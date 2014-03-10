@@ -22,9 +22,18 @@ html {
 	background-color: red;
 }
 
+.header, .footer{
+    text-align: center;
+}
 .header *{
     vertical-align: middle;
 }
 .header label{
     font-size: 18px;
+}
+
+.footer {
+    background-repeat: no-repeat;
+    background-position: 30px 0px;
+    background-size: 40px 40px;
 }

@@ -27,13 +27,11 @@ function HeaderView () {
 
     this.score = new Surface({
     	size: [320, 120],
-    	classes: ["header"],
     	properties: {textAlign:"center"}
     });
 
     this.moves = new Surface({
     	size: [320, 120],
-    	classes: ["header"],
     	properties: {textAlign:"center"}
     });
 
