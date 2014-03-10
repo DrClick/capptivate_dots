@@ -198,6 +198,10 @@ board.showIsSquare = function(color){
     for (var i = dotsOfAColor.length - 1; i >= 0; i--) {
         dotsOfAColor[i].boing();
     };
+
+    if ("vibrate" in navigator) {
+        navigator.vibrate("1000");
+    }
 }
 
 
