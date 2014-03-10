@@ -1,0 +1,19 @@
+{
+  "name": "views/header-view",
+  "namespace": "views",
+  "version": "0.0.0",
+  "author": "Tom Watson",
+  "scripts": [
+      "header-view.js"
+  ],
+  "description": "The game Header",
+  "license": "MIT",
+  "dependencies": {
+    "famous/engine": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/surface": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/modifier": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/transform": "git+ssh://git@github.com:Famous/famous.git#modularized",
+    "famous/view": "git+ssh://git@github.com:Famous/famous.git#modularized"
+  },
+  "local": []  
+}

@@ -1,3 +1,4 @@
+//famous
 var View            = require('famous/view');
 var Transform       = require('famous/transform');
 var Surface         = require('famous/surface'); 
@@ -10,14 +11,14 @@ var MouseSync       = require("famous/input/mouse-sync");
 var TouchSync       = require("famous/input/touch-sync");
 var Transitionable  = require("famous/transitions/transitionable");
 
+//views
 var Board           = require("models/board-model");
+var HeaderView      = require("views/header-view");
+var FooterView      = require("views/footer-view");
 
 
 function AppView() {
     View.apply(this, arguments);
-
-    this.touchPos = [];
-    this.anchors = [];
 
     _create.call(this);
     _calcOffsets.call(this);
@@ -27,7 +28,33 @@ AppView.prototype.constructor = AppView;
 AppView.DEFAULT_OPTIONS = {};
 
 function _create(){
+    //properties
+    this.touchPos = [];
+    this.anchors = [];
+    this.score = 0;
+    this.powerUps = {addCounter: 3, shrink: 12, remove: 4};
+    this.counter = 30; //Moves or timer
+
+    this.header = new HeaderView();
+    this.footer = new FooterView();
+
+    //add views
     this._add(Board.boardView);
+
+    this.headerModifier = new Modifier(
+        {
+            transform: Transform.translate(0,-100,4),
+            origin: [.5,0]
+        }
+    );
+    this.footerModifier = new Modifier(
+        {
+            transform: Transform.translate(0, 100,4),
+            origin: [.5,1]
+        }
+    );
+    this._add(this.headerModifier).add(this.header);
+    this._add(this.footerModifier).add(this.footer);
 
 
     //create syncs to handle updates
@@ -220,7 +247,15 @@ function _dragEnd(data){
     
 AppView.prototype.start = function(){
     Board.init();
-    Board.drop();
+    
+    this.headerModifier.setTransform(
+        Transform.translate(0,-16,4),
+        {curve: "easeOutBounce", duration:300});
+    this.footerModifier.setTransform(
+        Transform.translate(0,16,4),
+        {curve: "easeOutBounce", duration:300});
+
+    Timer.setTimeout(function(){Board.drop()}, 400);
 }
     
 

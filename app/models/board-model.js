@@ -24,8 +24,6 @@ board.init = function(){
     EventHandler.setInputHandler(this, this._eventInput);
     EventHandler.setOutputHandler(this, this._eventOutput);
 
-    
-
 
     //create the board
     for (var j = 0; j < 6; j++) {
@@ -62,7 +60,7 @@ board.drop = function(){
             else{
                 Timer.clear(buildInterval);
             }
-        }.bind(this),0);
+        }.bind(this),60);
 }//end drop
 
 board.reset = function(){
@@ -118,32 +116,6 @@ board.score = function(dotPointers){
     Timer.setTimeout(function(){
         this.drop();
     }.bind(this),100);
-}
-
-function _updateBoard(dot, isSquareUpdate){
-    var dotRow = dot.options.y;
-    var dotColumn = dot.options.x;
-
-    //change the row of all dots above it
-    for (var i = dotRow - 1; i >= 0; i--) {
-        var dotToUpdate = this.dots[i][dotColumn];
-        //update the dots property
-        dotToUpdate.options.y++;
-
-        //move it in the matrix
-        this.dots[i+1][dotColumn] = dotToUpdate
-    };
-
-    //get a new random color, but if square update, dont allow
-    //the same color
-    var color = this.colors[Math.round(Math.random() * 4)];
-    while(isSquareUpdate && color == dot.options.color){
-        color = this.colors[Math.round(Math.random() * 4)];
-        console.log(color);
-    }
-
-    dot.reset(dot.options.x, 0, color);
-    this.dots[0][dotColumn] = dot;
 }
 
 board.calculateWhichDotsToRemove = function(dotPointers, isSquare){
@@ -210,8 +182,6 @@ board.showIsSquare = function(color){
 }
 
 
-
-
 board.clearIsSquare = function(){
     this.boardView.surface.setProperties({
         backgroundColor: "transparent"
@@ -219,11 +189,6 @@ board.clearIsSquare = function(){
     this.boardView.modifier.setOpacity(1);
 }
 
-
-function _mapPointersToIndex(dotPointers){
-    //takes an array of dot pointers and converts them to index (0-35)
-    return dotPointers.map(function(point){ return point[1] * 6 + point[0]});
-}
 
 function _dotclickedHandler(){
 	console.log("dot clicked");
@@ -242,6 +207,37 @@ function _getDotsByColor(color){
     }
 
     return dots;
+}
+
+function _mapPointersToIndex(dotPointers){
+    //takes an array of dot pointers and converts them to index (0-35)
+    return dotPointers.map(function(point){ return point[1] * 6 + point[0]});
+}
+
+function _updateBoard(dot, isSquareUpdate){
+    var dotRow = dot.options.y;
+    var dotColumn = dot.options.x;
+
+    //change the row of all dots above it
+    for (var i = dotRow - 1; i >= 0; i--) {
+        var dotToUpdate = this.dots[i][dotColumn];
+        //update the dots property
+        dotToUpdate.options.y++;
+
+        //move it in the matrix
+        this.dots[i+1][dotColumn] = dotToUpdate
+    };
+
+    //get a new random color, but if square update, dont allow
+    //the same color
+    var color = this.colors[Math.round(Math.random() * 4)];
+    while(isSquareUpdate && color == dot.options.color){
+        color = this.colors[Math.round(Math.random() * 4)];
+        console.log(color);
+    }
+
+    dot.reset(dot.options.x, 0, color);
+    this.dots[0][dotColumn] = dot;
 }
 
 
