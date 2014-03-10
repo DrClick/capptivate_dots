@@ -105,17 +105,15 @@ board.score = function(dotPointers){
     //shrink them
     for (var i = dotsToRemove.length - 1; i >= 0; i--) {
         var dot = dotsToRemove[i];
-        Timer.setTimeout(function(d){
-            d.shrink();
-            _updateBoard.call(this, d, isSquare);
-        }.bind(this, dot), 0);
+        dot.shrink();
+        _updateBoard.call(this, dot, isSquare);
+        
     };
 
-    //redrop the board //NOTE: this needs a bit so the above update 
-    //boards can complete. At timeout 0, it can produce errors.
+    //redrop the board 
     Timer.setTimeout(function(){
         this.drop();
-    }.bind(this),100);
+    }.bind(this),0);
 }
 
 board.calculateWhichDotsToRemove = function(dotPointers, isSquare){

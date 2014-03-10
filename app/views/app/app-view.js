@@ -61,7 +61,7 @@ function _create(){
     this.touchPos = [0,0]
     this.sync = new GenericSync(function() {
         return this.touchPos;
-    }.bind(this));
+    }.bind(this), {syncClasses:[MouseSync, TouchSync]});
        
 
     _handleTouch.call(this);
