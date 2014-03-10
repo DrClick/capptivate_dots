@@ -13,7 +13,8 @@ var board = {
 	dotDiameter: 40,
 	boardView: new BoardView(),
     _eventInput: new EventHandler(),
-    _eventOutput: new EventHandler()
+    _eventOutput: new EventHandler(),
+    firstDirtyRow : 5
 
 };
 
@@ -46,7 +47,7 @@ board.init = function(){
 
 board.drop = function(){
 	 //Load the board
-    var currentRow = 5;
+    var currentRow = this.firstDirtyRow;
 
     var dropARow = function(){
         if(currentRow >= 0){
@@ -103,21 +104,31 @@ board.score = function(dotPointers){
     var isSquare = this.determineIfSquare(dotPointers);
     var dotsToRemove = this.calculateWhichDotsToRemove(dotPointers, isSquare);
 
+    //reset the first dirty row indicator. Thie keeps a pause from happening
+    //while dropping
+    this.firstDirtyRow = 0;
+
 
     //shrink them
     for (var i = dotsToRemove.length - 1; i >= 0; i--) {
         var dot = dotsToRemove[i];
+
+        //update the first Dirty Row
+        if(dot.options.y >= this.firstDirtyRow){this.firstDirtyRow = dot.options.y;}
+
+
         dot.shrink();
         _updateBoard.call(this, dot, isSquare);
-        
     };
 
     this._eventOutput.emit("moveCompleted", dotsToRemove.length);
 
+
+
     //redrop the board 
-    //Timer.setTimeout(function(){
+    Timer.setTimeout(function(){
         this.drop();
-    //}.bind(this),0);
+    }.bind(this),0);
 }
 
 board.calculateWhichDotsToRemove = function(dotPointers, isSquare){
