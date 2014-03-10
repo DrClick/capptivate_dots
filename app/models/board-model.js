@@ -155,33 +155,23 @@ board.calculateWhichDotsToRemove = function(dotPointers, isSquare){
 board.determineIfSquare = function(dotPointers){
     var dotNumbers = _mapPointersToIndex(dotPointers);
     
-    //find duplicates in linear time
-    var sum = {upper: 0, lower: 0};
+    //http://jsperf.com/in-array-bit-setting
+    //This method is faster than what I originally tried with setting bits
+    var seenBefore = {};
     var isSquare = false;
 
     for (var i = 0; i < dotNumbers.length; i++) {
-        var dot = dotNumbers[i];
-        
-        //flip the nth bit corresponding to its number in the index
-        //because javascript is 32 bit, we have to break board into
-        //two halfs
-        var whichHalf = (dot > 15) ? "upper": "lower";
-        dot = dot % 16;
+      var dot = dotNumbers[i];
 
-        var bitDot = Math.pow(2, dot);
-
-        //if the running sum bitwise add = 0, not a repeat
-        //console.log("bitwise sum and dot", sum.toString(2), bitDot.toString(2))
-        
-        if ((sum[whichHalf] & bitDot) == 0){
-            sum[whichHalf] = sum[whichHalf] | bitDot;
-        }
-        else
-        {
-            isSquare = true;
-            break;
-        }
+      if (!seenBefore[dot]) {
+        seenBefore[dot] = true;
+      } else {
+        isSquare = true;
+        break;
+      }
     }
+
+
 
     return isSquare;
 }
