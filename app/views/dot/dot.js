@@ -29,7 +29,7 @@ Dot.DEFAULT_OPTIONS = {
 	stage: 0,
 	grid: 90,
 	board: 640,
-	baseAnimationTime: 100,
+	baseAnimationTime: 200,
 	diameter: 40,
 	highlightScale: 2.5,
 	highlightDuration: 400,

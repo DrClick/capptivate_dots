@@ -21,8 +21,8 @@ function HeaderView () {
     this._add( surface );
 
     this.templates = {
-    	score: "<label>Score:</label> ",
-    	moves: "<label>Move:</label> "
+    	score: "<label>Score </label> ",
+    	moves: "<label>Moves left </label> "
     };
 
     this.score = new Surface({
@@ -54,8 +54,8 @@ HeaderView.prototype.constructor = HeaderView;
 HeaderView.DEFAULT_OPTIONS = {}
 
 HeaderView.prototype.update = function(values){
-	this.score.content = this.templates.score + "<span>" + values.score + "</span>";
-	this.moves.content = this.templates.moves + "<span>" + values.moves + "</span>";
+	this.score.setContent(this.templates.score + "<span>" + values.score + "</span>");
+	this.moves.setContent(this.templates.moves + "<span>" + values.moves + "</span>");
 }
 
 

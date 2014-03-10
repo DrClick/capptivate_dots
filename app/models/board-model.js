@@ -11,7 +11,9 @@ var board = {
 	gridSize: 90,
 	boardSize: 640,
 	dotDiameter: 40,
-	boardView: new BoardView()
+	boardView: new BoardView(),
+    _eventInput: new EventHandler(),
+    _eventOutput: new EventHandler()
 
 };
 
@@ -19,10 +21,8 @@ board.init = function(){
 	this.initialized = true;
 	
 	//wire up event in and out
-	this.eventInput = new EventHandler();
-    this.eventOutput = new EventHandler();
-    EventHandler.setInputHandler(this, this.eventInput);
-    EventHandler.setOutputHandler(this, this.eventOutput);
+    EventHandler.setInputHandler(this, this._eventInput);
+    EventHandler.setOutputHandler(this, this._eventOutput);
 
 
     //create the board
@@ -47,19 +47,22 @@ board.init = function(){
 board.drop = function(){
 	 //Load the board
     var currentRow = 5;
-    var buildInterval = Timer.setInterval(
-        function(){
-            if(currentRow >= 0){
-                for (var i = 0; i < 6; i++) {
-                    var dotToDrop = this.dots[currentRow][i];
-                    dotToDrop.drop();
-                }
-                currentRow--;
-            }//end if in range
-            else{
-                Timer.clear(buildInterval);
+
+    var dropARow = function(){
+        if(currentRow >= 0){
+            for (var i = 0; i < 6; i++) {
+                var dotToDrop = this.dots[currentRow][i];
+                dotToDrop.drop();
             }
-        }.bind(this),60);
+            currentRow--;
+        }//end if in range
+        else{
+            Timer.clear(buildInterval);
+        }
+    };
+
+    dropARow.call(this);
+    var buildInterval = Timer.setInterval(dropARow.bind(this),80);
 }//end drop
 
 board.reset = function(){
@@ -109,12 +112,12 @@ board.score = function(dotPointers){
         
     };
 
-    this.boardView.emit("moveCompleted", {points: dotsToRemove.length});
+    this._eventOutput.emit("moveCompleted", dotsToRemove.length);
 
     //redrop the board 
-    Timer.setTimeout(function(){
+    //Timer.setTimeout(function(){
         this.drop();
-    }.bind(this),0);
+    //}.bind(this),0);
 }
 
 board.calculateWhichDotsToRemove = function(dotPointers, isSquare){

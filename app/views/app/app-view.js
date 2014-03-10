@@ -10,6 +10,7 @@ var GenericSync     = require("famous/input/generic-sync");
 var MouseSync       = require("famous/input/mouse-sync");
 var TouchSync       = require("famous/input/touch-sync");
 var Transitionable  = require("famous/transitions/transitionable");
+var EventHandler    = require("famous/event-handler");
 
 //views
 var Board           = require("models/board-model");
@@ -33,7 +34,7 @@ function _create(){
     this.anchors = [];
     this.score = 0;
     this.powerUps = {addCounter: 3, shrink: 12, remove: 4};
-    this.counter = 999; //Moves or timer
+    this.counter = 1000; //Moves or timer
 
         
     Board.init();
@@ -41,7 +42,7 @@ function _create(){
     _constructScene.call(this);
     _handleTouch.call(this);
     _handleBoardEvents.call(this);
-    _updateHeader.call(this);
+    _updateHeader.call(this, 0);
 }//end create
 
 function _constructScene(){
@@ -97,18 +98,13 @@ function _handleTouch() {
 }
 
 function _handleBoardEvents(){
-    console.log("I am here");
-    Board.boardView.on("moveCompleted", function(points){
-        alert("WTF");
-        this.score += points;
-        this.counter--;
-        _updateHeader.call(this);
-    }.bind(this));
+    Board.on("moveCompleted", _updateHeader.bind(this));
 }
 
-function _updateHeader(){
-    console.log("update", this.score, this.counter);
-    this.header.update({score:this.score, moves: this.counter});
+function _updateHeader(points){
+    this.score += points;
+    this.counter--;
+    this.header.update({score: this.score, moves: this.counter});
 }
 
 function _anchorLine(data){
